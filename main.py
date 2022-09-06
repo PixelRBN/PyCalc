@@ -1,5 +1,5 @@
 import pygame
-import array as arr
+from numpy import array
 pygame.init()
 
 win_size = (500, 700)
@@ -176,19 +176,14 @@ def list_to_num(list1):
         num = float("".join(map(str, list1)))
     return num
 
-num_array = arr.array('f', [0, 0, 0, 0, 0])
 
-
-
+num_array = array([0,0,0,0,0,0])        # TODO Make infinite array
 num_ans = 0
-
 typing_num1 = True
 num2_first = True
 equalpressed = False
-
-i = 0
+i = 0   # value for num_array
 b = 0
-
 disp_txt = []
 
 
@@ -203,7 +198,6 @@ while True:
                     if rect.collidepoint(pygame.mouse.get_pos()):
                         maths()
                         a = list_to_num(num_list)
-                        #print("num1 = ", a)
 
                 # Number 2
 
@@ -214,39 +208,28 @@ while True:
                         num1 = num_list
                         num_list = []
                         b = list_to_num(num_list)
-                       #print("num list", b)
-                       #print("the val at here disp txt", disp_txt)
-
                         typing_num1 = False
+
+# TODO Reset result when new number is clicked
 
             if not typing_num1:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if rect.collidepoint(pygame.mouse.get_pos()):
                         maths()
-                        num_array[i] = list_to_num(num_list)
+                        num_array[i] = list_to_num(num_list)     # TODO Use List here
                         for op in ops:
 
                             if op.collidepoint(pygame.mouse.get_pos()):
 
+                                # Clear
                                 if op == gui.b_clear_rect:
-                                    clear_list = py_text
-                                    clear_char = list(clear_list[-1])
-                                    py_text = py_text.rstrip(str(clear_char))
-
-                                    test1 = list(py_inp_op[-1])
-
-                                    py_inp_op = py_inp_op.rstrip(str(list(py_inp_op[-1])))
+                                    py_text = py_text[:-1]
+                                    py_inp_op = py_inp_op[:-1]     # Clearing for py inp op (Display text)
                                     print("test")
-
-                                    # numbers fully dissapper prob  in py_inp op
-
-
 
                                 # Equal
                                 if op == gui.b_equal_rect:
-                                   # print("for equal b val here ", b)
                                     disp_txt.append(str(b))
-                                   # print("equal part")
                                     equalpressed = True
 
                                 # Sum
@@ -349,7 +332,7 @@ while True:
 
 
     if equalpressed:
-        ans = eval(py_text)
+        ans = eval(py_text)     # TODO Crashes when py_text is empty ( Due to Clear on single digit )
         disp_txt.clear()
         disp_txt.append(str(ans))
         py_text = str(ans)
@@ -387,6 +370,3 @@ while True:
     win_screen.blit(display, (0, 0))
     clock.tick(60)
     pygame.display.update()
-
-# testing github
-# idk
