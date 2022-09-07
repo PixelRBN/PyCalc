@@ -217,6 +217,7 @@ while True:
                     if rect.collidepoint(pygame.mouse.get_pos()):
                         maths()
                         num_array[i] = list_to_num(num_list)     # TODO Use List here
+# find how array works here
                         for op in ops:
 
                             if op.collidepoint(pygame.mouse.get_pos()):
