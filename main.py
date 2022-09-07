@@ -86,8 +86,8 @@ button_rects = [gui.b_0_rect, gui.b_1_rect, gui.b_2_rect, gui.b_3_rect, gui.b_4_
                 gui.b_9_rect, gui.b_plus_rect, gui.b_minus_rect, gui.b_div_rect, gui.b_clear_rect, gui.b_ac_rect, gui.b_opt_rect, gui.b_dot_rect, gui.b_mul_rect]
 
 py_inp = 0
-py_text = ""
-py_inp_op = ""
+py_text = ""        # Used for Calculation
+py_inp_op = ""      # Display text top
 ans = 0
 num_list = []
 
@@ -149,7 +149,7 @@ def maths():
                 if gui.b_plus_rect.collidepoint(mouse_pos):
                     py_inp_op += "+"
                     py_text += "+"
-                    print("a")
+                    #print("a")
                 if gui.b_minus_rect.collidepoint(mouse_pos):
                     py_inp_op += "-"
                     py_text += "-"
@@ -166,18 +166,21 @@ def maths():
 
 
 num = 0
-ops = [gui.b_plus_rect, gui.b_minus_rect, gui.b_mul_rect, gui.b_div_rect, gui.b_equal_rect, gui.b_clear_rect]
+ops = [gui.b_plus_rect, gui.b_minus_rect, gui.b_mul_rect, gui.b_div_rect, gui.b_equal_rect, gui.b_clear_rect, gui.b_ac_rect]
 op_sym = ["+", "-", "/", "*"]
 
 
 def list_to_num(list1):
     global num
     for i in num_list:
+        if list1[0] == ".":
+            list1[0] = "0.0"
         num = float("".join(map(str, list1)))
     return num
 
 
-num_array = array([0,0,0,0,0,0])        # TODO Make infinite array
+list_conv = []
+num_array = array([0])
 num_ans = 0
 typing_num1 = True
 num2_first = True
@@ -199,7 +202,10 @@ while True:
                         maths()
                         a = list_to_num(num_list)
 
-                # Number 2
+            if py_inp_op == ".":
+                py_inp_op = "0."
+            if py_text == ".":
+                py_text = "0."
 
             for op in ops:
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -210,28 +216,35 @@ while True:
                         b = list_to_num(num_list)
                         typing_num1 = False
 
-# TODO Reset result when new number is clicked
-
             if not typing_num1:
-                if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.type == pygame.MOUSEBUTTONDOWN and rect.collidepoint(pygame.mouse.get_pos()):
                     if rect.collidepoint(pygame.mouse.get_pos()):
                         maths()
-                        num_array[i] = list_to_num(num_list)     # TODO Use List here
-# find how array works here
-                        for op in ops:
+                        # Array converter moved down Check for possible errors
 
+                        for op in ops:
                             if op.collidepoint(pygame.mouse.get_pos()):
+
+                                list_conv.append(list_to_num(num_list))
+                                num_array = list_conv
+
+                                # AC
+                                if op == gui.b_ac_rect:
+                                    list_conv = []
+                                    num_array = i = b = a = num = ans = 0
+                                    py_text = py_inp_op = ""
 
                                 # Clear
                                 if op == gui.b_clear_rect:
                                     py_text = py_text[:-1]
                                     py_inp_op = py_inp_op[:-1]     # Clearing for py inp op (Display text)
-                                    print("test")
+                                    #print("test")
 
                                 # Equal
                                 if op == gui.b_equal_rect:
                                     disp_txt.append(str(b))
                                     equalpressed = True
+
 
                                 # Sum
                                 if op == gui.b_plus_rect:
@@ -331,19 +344,31 @@ while True:
 
     # print("eval ", ans)
 
+    # TODO Remove leading zeros ( Causes error in eval )
+    # if py_text[:1] not in op_sym:
+    #     for s in op_sym:
+    #         if s in py_text:
+    #             print(py_text.split(s))
+    #         print(py_text)
 
+    # TODO Invalid syntax eg : 65+*6
     if equalpressed:
-        ans = eval(py_text)     # TODO Crashes when py_text is empty ( Due to Clear on single digit )
+        if py_text == "":
+            py_text = "0"
+        if py_text[-1:] in op_sym or py_text[-1:] == ".":
+            py_text = py_text[:-1]
+        ans = eval(py_text)
         disp_txt.clear()
         disp_txt.append(str(ans))
         py_text = str(ans)
+
 
     else:
         disp_txt.pop()
 
     # Text
 
-    print("pytext = ", py_text)
+    #print("pytext = ", py_text)
 
     font_size = 50
     if ans > 100000000:
