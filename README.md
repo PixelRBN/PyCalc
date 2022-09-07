@@ -1,3 +1,3 @@
 # PyCalc
-GUI Calculator using PyGame
+GUI Calculator using Python with PyGame
 # This project is Incomplete.
