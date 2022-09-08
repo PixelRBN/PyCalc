@@ -1,5 +1,6 @@
 import pygame
 from numpy import array
+import re
 pygame.init()
 
 win_size = (500, 700)
@@ -90,6 +91,7 @@ py_text = ""        # Used for Calculation
 py_inp_op = ""      # Display text top
 ans = 0
 num_list = []
+rgx = re.compile(r'(?<!\.)\b(0+)([1-9])+\b')
 
 
 def maths():
@@ -149,7 +151,6 @@ def maths():
                 if gui.b_plus_rect.collidepoint(mouse_pos):
                     py_inp_op += "+"
                     py_text += "+"
-                    #print("a")
                 if gui.b_minus_rect.collidepoint(mouse_pos):
                     py_inp_op += "-"
                     py_text += "-"
@@ -210,7 +211,6 @@ while True:
             for op in ops:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if op.collidepoint(pygame.mouse.get_pos()):
-
                         num1 = num_list
                         num_list = []
                         b = list_to_num(num_list)
@@ -220,7 +220,6 @@ while True:
                 if event.type == pygame.MOUSEBUTTONDOWN and rect.collidepoint(pygame.mouse.get_pos()):
                     if rect.collidepoint(pygame.mouse.get_pos()):
                         maths()
-                        # Array converter moved down Check for possible errors
 
                         for op in ops:
                             if op.collidepoint(pygame.mouse.get_pos()):
@@ -237,18 +236,15 @@ while True:
                                 # Clear
                                 if op == gui.b_clear_rect:
                                     py_text = py_text[:-1]
-                                    py_inp_op = py_inp_op[:-1]     # Clearing for py inp op (Display text)
-                                    #print("test")
+                                    py_inp_op = py_inp_op[:-1]
 
                                 # Equal
                                 if op == gui.b_equal_rect:
                                     disp_txt.append(str(b))
                                     equalpressed = True
 
-
                                 # Sum
                                 if op == gui.b_plus_rect:
-
                                     a = num_array[i]
                                     i = i + 1
 
@@ -258,20 +254,16 @@ while True:
                                         equalpressed = False
 
                                     num_ans += a
-                                    #print("sum = ", num_ans)
                                     disp_txt.append(str(a))
-                                   # print(" a aa ", a)
                                     disp_txt.append("+")
 
                                 # Difference
                                 if op == gui.b_minus_rect:
                                     a = num_array[i]
-                                   # print("array ", num_array)
                                     i = i + 1
                                     if num_ans == 0:
                                         num_ans = 1
                                         a = 0
-                                    # print(" a = ", a , "mem num = ", num_ans)
                                     num_ans = num_ans - a
 
                                     if equalpressed:
@@ -279,7 +271,6 @@ while True:
                                         num_array[i-1] = 0
                                         equalpressed = False
 
-                                    #print("diff = ", num_ans)
                                     disp_txt.append(str(num_array[i-1]))
                                     disp_txt.append("-")
 
@@ -288,12 +279,9 @@ while True:
                                     a = num_array[i]
                                     i = i + 1
                                     if num_ans == 0:
-                                        #print("working on it")
                                         num_ans = num_array[i-1]
                                     else:
-                                        #print(" a = ", a, "mem num = ", num_ans)
                                         num_ans = num_ans * a
-                                    #print("mul = ", num_ans)
 
                                     if equalpressed:
                                         disp_txt.append("*")
@@ -310,7 +298,6 @@ while True:
                                     if num_ans == 0:
                                         num_ans = num_array[i-1]
                                     else:
-                                       # print(" a = ", a, "mem num = ", num_ans)
                                         num_ans = num_ans / a
 
                                     if equalpressed:
@@ -318,13 +305,10 @@ while True:
                                         a = 1
                                         equalpressed = False
 
-                                    #print("div = ", num_ans)
                                     disp_txt.append(str(a))
                                     disp_txt.append("/")
 
     # Input Display
-
-    #print(disp_txt)
 
     if disp_txt == []:
         disp_txt = ["0"]
@@ -334,42 +318,30 @@ while True:
 
     for operator in op_sym:
         if disp_txt[-1] == operator:
-            #print(disp_txt)
             disp_txt.append("0")
 
-    #print(" the disp text val ", disp_txt)
-
     txt = " ".join(disp_txt)
-    # print("the txt ", txt)
 
-    # print("eval ", ans)
+    # Regex to remove leading zero
+    py_text = rgx.sub(r'\2', py_text)
+    # print(py_text)
 
-    # TODO Remove leading zeros ( Causes error in eval )
-    # if py_text[:1] not in op_sym:
-    #     for s in op_sym:
-    #         if s in py_text:
-    #             print(py_text.split(s))
-    #         print(py_text)
-
-    # TODO Invalid syntax eg : 65+*6
     if equalpressed:
         if py_text == "":
             py_text = "0"
         if py_text[-1:] in op_sym or py_text[-1:] == ".":
             py_text = py_text[:-1]
-        ans = eval(py_text)
+        try:
+            ans = eval(py_text)
+        except SyntaxError:
+            py_inp_op = "Syntax Error"
         disp_txt.clear()
         disp_txt.append(str(ans))
         py_text = str(ans)
-
-
     else:
         disp_txt.pop()
 
     # Text
-
-    #print("pytext = ", py_text)
-
     font_size = 50
     if ans > 100000000:
         font_size = 30
