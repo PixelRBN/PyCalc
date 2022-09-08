@@ -43,18 +43,23 @@ class gui:
     b_clear = pygame.image.load('assets/gui/buttons/clear.png').convert_alpha()
     b_clear_rect = b_clear.get_rect(topleft=(10, 270))
     b_ac = pygame.image.load('assets/gui/buttons/ac.png').convert_alpha()
-    b_ac_rect = b_ac.get_rect(topleft=(133, 270))
+    b_ac_rect = b_ac.get_rect(topleft=(380, 270))
     b_dot = pygame.image.load('assets/gui/buttons/dot.png').convert_alpha()
     b_dot_rect = b_dot.get_rect(topleft=(256, 270))
-    b_opt = pygame.image.load('assets/gui/buttons/option.png').convert_alpha()
-    b_opt_rect = b_opt.get_rect(topleft=(379, 270))
+    b_bracket_r = pygame.image.load('assets/gui/buttons/bracket_right.png').convert_alpha()
+    b_bracket_r_rect = b_bracket_r.get_rect(topleft=(190, 270))
+    b_bracket_l = pygame.image.load('assets/gui/buttons/bracket_left.png').convert_alpha()
+    b_bracket_l_rect = b_bracket_l.get_rect(topleft=(133, 270))
 
     # Display
     num_display = pygame.image.load('assets/gui/buttons/display.png').convert_alpha()
-    num_display_rect = num_display.get_rect(topleft = (25, 55))
+    num_display_rect = num_display.get_rect(topleft = (18, 45))
+    bg = pygame.image.load('assets/gui/buttons/Bg.png').convert()
+    bg_rect = bg.get_rect(topleft= (0,0))
 
 
 def buttons():
+    display.blit(gui.bg, gui.bg_rect)
     display.blit(gui.b_0, gui.b_0_rect)
     display.blit(gui.b_1, gui.b_1_rect)
     display.blit(gui.b_2, gui.b_2_rect)
@@ -75,8 +80,11 @@ def buttons():
     display.blit(gui.b_clear, gui.b_clear_rect)
     display.blit(gui.b_ac, gui.b_ac_rect)
     display.blit(gui.b_dot, gui.b_dot_rect)
-    display.blit(gui.b_opt, gui.b_opt_rect)
+    display.blit(gui.b_bracket_l, gui.b_bracket_l_rect)
+    display.blit(gui.b_bracket_r, gui.b_bracket_r_rect)
 
 
 button_rects = [gui.b_0_rect, gui.b_1_rect, gui.b_2_rect, gui.b_3_rect, gui.b_4_rect, gui.b_5_rect, gui.b_6_rect, gui.b_7_rect, gui.b_8_rect, gui.b_equal_rect,
-                gui.b_9_rect, gui.b_plus_rect, gui.b_minus_rect, gui.b_div_rect, gui.b_clear_rect, gui.b_ac_rect, gui.b_opt_rect, gui.b_dot_rect, gui.b_mul_rect]
+                gui.b_9_rect, gui.b_plus_rect, gui.b_minus_rect, gui.b_div_rect, gui.b_clear_rect, gui.b_ac_rect, gui.b_dot_rect, gui.b_mul_rect, gui.b_bracket_l_rect, gui.b_bracket_r_rect]
+
+

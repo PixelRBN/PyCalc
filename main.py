@@ -81,6 +81,14 @@ def maths():
                     num_list.append('.')
                     py_text += "."
                     py_inp_op += "."
+                if gui.b_bracket_r_rect.collidepoint(mouse_pos):
+                    num_list.append(")")
+                    py_text += ")"
+                    py_inp_op += ")"
+                if gui.b_bracket_r_rect.collidepoint(mouse_pos):
+                    num_list.append("(")
+                    py_text += "("
+                    py_inp_op += "("
 
 
 def list_to_num(list1):
@@ -88,12 +96,13 @@ def list_to_num(list1):
     for _ in num_list:
         if list1[0] == ".":
             list1[0] = "0.0"
+        #print(list1)
         num = float("".join(map(str, list1)))
     return num
 
 
 num = 0
-ops = [gui.b_plus_rect, gui.b_minus_rect, gui.b_mul_rect, gui.b_div_rect, gui.b_equal_rect, gui.b_clear_rect, gui.b_ac_rect]
+ops = [gui.b_plus_rect, gui.b_minus_rect, gui.b_mul_rect, gui.b_div_rect, gui.b_equal_rect, gui.b_clear_rect, gui.b_ac_rect, gui.b_bracket_l_rect, gui.b_bracket_r_rect]
 op_sym = ["+", "-", "/", "*"]
 
 list_conv = []
@@ -226,8 +235,13 @@ while True:
                                     disp_txt.append(str(a))
                                     disp_txt.append("/")
 
-    # Input Display
+                                    if op == gui.b_bracket_l_rect:
+                                        disp_txt.append("(")
+                                    if op == gui.b_bracket_r_rect:
+                                        disp_txt.append(")")
 
+    # Input Display
+    # print(disp_txt, py_text, py_inp_op)
     if not disp_txt:
         disp_txt = ["0"]
 
