@@ -1,10 +1,9 @@
 import pygame
 from numpy import array
 import re
-from gui import gui, buttons, button_rects, display, win_screen, win_size, clock
+from gui import gui, buttons, button_rects, display, win_screen, clock
 pygame.init()
 
-py_inp = 0
 py_text = ""        # Used for Calculation
 py_inp_op = ""      # Display text top
 ans = 0
@@ -15,9 +14,9 @@ rgx = re.compile(r'(?<!\.)\b(0+)([1-9])+\b')
 def maths():
     global py_text, py_inp_op
     str(py_inp_op)
-    for rect in button_rects:
+    for b_rect in button_rects:
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if rect.collidepoint(pygame.mouse.get_pos()):
+            if b_rect.collidepoint(pygame.mouse.get_pos()):
                 mouse_pos = pygame.mouse.get_pos()
 
                 if equalpressed:
@@ -84,19 +83,18 @@ def maths():
                     py_inp_op += "."
 
 
-num = 0
-ops = [gui.b_plus_rect, gui.b_minus_rect, gui.b_mul_rect, gui.b_div_rect, gui.b_equal_rect, gui.b_clear_rect, gui.b_ac_rect]
-op_sym = ["+", "-", "/", "*"]
-
-
 def list_to_num(list1):
     global num
-    for i in num_list:
+    for _ in num_list:
         if list1[0] == ".":
             list1[0] = "0.0"
         num = float("".join(map(str, list1)))
     return num
 
+
+num = 0
+ops = [gui.b_plus_rect, gui.b_minus_rect, gui.b_mul_rect, gui.b_div_rect, gui.b_equal_rect, gui.b_clear_rect, gui.b_ac_rect]
+op_sym = ["+", "-", "/", "*"]
 
 list_conv = []
 num_array = array([0])
@@ -110,10 +108,12 @@ disp_txt = []
 
 
 while True:
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
+
         for rect in button_rects:
             if typing_num1:
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -228,7 +228,7 @@ while True:
 
     # Input Display
 
-    if disp_txt == []:
+    if not disp_txt:
         disp_txt = ["0"]
 
     if disp_txt[-1] == "*" or disp_txt[-1] == "/":
